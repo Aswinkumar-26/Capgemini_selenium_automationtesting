@@ -1,0 +1,184 @@
+package generic_utility;
+
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.Set;
+
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+
+public class WebDriverUtility {
+	
+	WebDriver driver;
+	
+	public WebDriverUtility(WebDriver driver2) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void configMaximizedBrowser() {
+		driver.manage().window().maximize();
+	}
+	
+	public void configMinimizedBrowser() {
+		driver.manage().window().minimize();
+	}
+	
+	public void configFullScreenBrowser() {
+		driver.manage().window().fullscreen();
+	}
+	
+	public Dimension fetchSize() {
+		Dimension dim = driver.manage().window().getSize();
+		return dim;
+	}
+	
+	public void configBrowserSize(int width,int height) {
+		driver.manage().window().setSize(new Dimension(width,height));
+	}
+	
+	public Point fetchBrowserPosition() {
+		Point point=driver.manage().window().getPosition();
+		return point;
+		
+	}
+	
+	public void configBrowserPosition(int x,int y) {
+		driver.manage().window().setPosition(new Point(x,y));
+	}
+
+	public void navigateToApplication(String fullUrl) {
+		driver.navigate().to(fullUrl);
+	}
+	
+	public void navigateForward() {
+		driver.navigate().forward();
+	}
+	
+	public void navigateBackward() {
+		driver.navigate().back();
+	}
+	
+	public void refreshCurrentPage() {
+		driver.navigate().refresh();
+	}
+	
+	public void enterUrl(String url) {
+		driver.get(url);
+		
+	}
+	
+	public String fetchApplicationTitle() {
+		String title=driver.getTitle();
+		return title;
+	}
+	
+	public String fetchApplicationUrl() {
+		String url=driver.getCurrentUrl();
+		return url;
+	}
+	
+	public void closingBrowserTab() {
+		driver.close();
+	}
+	
+	public void closingBrowserWindow() {
+		driver.quit();
+	}
+	
+	//timeouts
+	public void waitForElementsToLoad(int timeInSeconds) {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeInSeconds));
+	}
+	
+	public void waitTillElementsClickable(WebElement element,long maximumTimeToWait) {
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(maximumTimeToWait));
+		wait.until(ExpectedConditions.elementToBeClickable(element));
+	}
+	
+	public void waitTillTheElementsClickable(WebElement element,long maximumTimeToWait) {
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(maximumTimeToWait));
+		wait.until(ExpectedConditions.visibilityOf(element));
+	}
+	
+	//popups
+	public void clickOnAccept() {
+		driver.switchTo().alert().accept();
+	}
+	
+	public void clickOnDismiss() {
+		driver.switchTo().alert().dismiss();
+	}
+	
+	public void typeMessageInJavaScriptPopup(String text) {
+		driver.switchTo().alert().sendKeys(text);
+	}
+	
+	public String fetchJavaScriptPopupMessage() {
+		String message=driver.switchTo().alert().getText();
+		return message;
+	}
+	
+	//childwindow 
+	
+//	public void SwitchingToChildWindow() {
+//		String parent=driver.getWindowHandle();
+//		Set<String> all=driver.getWindowHandles();
+//		all.remove(parent);
+//		for(String child:all) {
+//			driver.navigate().to(child);
+//		}
+//	}
+	
+	public void windowSwitching(String childApplicationTitle) {
+		String parentId=driver.getWindowHandle();
+		Set<String> childIds=driver.getWindowHandles();
+		childIds.remove(parentId);
+		
+		for(String child:childIds) {
+			driver.switchTo().window(child);
+			String title=driver.getTitle();
+			if(title.contains(childApplicationTitle)) {
+				break;
+			}
+		}
+	}
+	
+	public void windowSwitchingByUrl(String childApplicationUrl) {
+		String parentId=driver.getWindowHandle();
+		Set<String> childIds=driver.getWindowHandles();
+		childIds.remove(parentId);
+		
+		for(String child:childIds) {
+			driver.switchTo().window(child);
+			String title=driver.getCurrentUrl();
+			if(title.contains(childApplicationUrl)) {
+				break;
+			}
+		}
+	}
+	public void switchFrameByIndex(int indexNo) {
+		driver.switchTo().frame(indexNo);
+		
+		
+	}
+	
+	public void switchToFrameByIdorName(String IdorName) {
+		driver.switchTo().frame(IdorName);
+	}
+	
+	public void switchToFrameByFrameElement(WebElement frameElement) {
+		driver.switchTo().frame(frameElement);
+	}
+	
+	public void switchBacktheControlToPreviousFrame() {
+		driver.switchTo().parentFrame();
+	}
+	public void switchBackTheControlToMainpage() {
+		driver.switchTo().defaultContent();
+	}
+}
